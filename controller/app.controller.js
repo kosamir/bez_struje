@@ -1,0 +1,27 @@
+import jwt from "jsonwebtoken";
+import {
+  getDistributionAreaSelect,
+  getDistributionAreaSelectChild
+} from "./../config/hepCrawler.js";
+
+export const index = async (req, res, next) => {
+  let first, second;
+  if (req.query.dp) {
+    first = await getDistributionAreaSelect();
+    second = await getDistributionAreaSelectChild(req.query.dp);
+  } else {
+    first = await getDistributionAreaSelect();
+  }
+  let magicword = await jwt.sign(
+    { password: process.env.API_MAGIC_WORD },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES_IN }
+  );
+
+  res.render("index", {
+    title: "HEP bezStruje",
+    select: first,
+    select2: second,
+    magicword: `'${magicword}'`
+  });
+};

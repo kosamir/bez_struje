@@ -1,0 +1,97 @@
+
+<div  class="container d-flex align-items-center justify-content-center  bg-light-4 border border-success p-2 mb-2 border-opacity-25">
+    <div class="row">
+        <div role="button" onclick="window.location.href='/'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <h1>Registracija na notifikacije HEP radova na el. mreži</h1>
+        </div>
+    </div>
+</div>
+<script type = "text/javascript">
+var token = {{{magicword}}}
+window.onload = (event) => {
+    var url = new URL(window.location.href);
+    var displayUserData = url.search.split("=").length > 2 ? true : false;
+    let hepbsFirstSelect = url.search.substring(url.search.indexOf("=") + 1, 
+                    url.search.indexOf("&") != -1 ? url.search.indexOf("&") : url.search.length);
+    // set first select box
+    document.getElementById("dp").value = hepbsFirstSelect;
+    // set second select box
+    let select = document.getElementsByClassName("popispogona")[1];
+    let hepbsSecondSelect = url.search.substring(url.search.lastIndexOf("=") + 1);
+    if (select) {
+        select.value = hepbsSecondSelect;
+    }
+    if (!displayUserData) {
+        $("#email-holder").addClass("disabled");
+        $("#street-holder").addClass("disabled");
+    }
+
+    registrationForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let body = {
+            dp: hepbsFirstSelect,
+            dp_child: hepbsSecondSelect,
+            email: document.getElementById("email").value,
+            street: document.getElementById("ulica").value
+        }
+        fetch('/register', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json; charset=UTF-8',
+                    'Authorization': `Bearer ${token}`
+                },
+            }).then(response => response.json())
+            .then(json => {
+                if([401,409].includes(json.code) ){
+                    document.getElementById("success").innerText = "";
+                    document.getElementById("error").innerText = `${json.status}: ${json.message}`;
+                }else{
+                    document.getElementById("success").innerText = "Provjerite mailbox kako bi aktivirali uslugu";
+                    document.getElementById("error").innerText = ``;
+                }
+            }).catch(error => {
+                console.log(error);
+            });
+    });
+}
+</script>
+<div class="container d-flex align-items-center justify-content-center  bg-light-4 border border-success p-2 mb-2 border-opacity-25">
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <form action="/register" id="registrationForm" class='was-validated'  method="post" role="form" enctype="application/x-www-form-urlencoded">
+                <legend class="text-center">Unos podataka za izvješćivanje mailom o planiranim radovima HEP ods-a</legend>
+                <div class="mb-3 mt-3">
+                    <label for="dp">Odaberite distribucijsko područje</label>
+                    {{{select}}}
+                </div>
+                {{#if select2}}
+                <div class="mb-3 mt-3">
+                    <label for="dp_child">Odaberite pogon</label>
+                    {{{select2}}}
+                </div>
+                {{/if}}
+                <div id="email-holder" class="mb-3 mt-3">
+                    <label for="email">Email adresa za zaprimanje obavijesti o radovima</label>
+                        <input type="text" class="form-control" name="email" id="email"  
+                        placeholder="Email Adresa" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" >
+                    <div class="invalid-feedback feedback-pos">
+                        Molimo unesite ispravnu e-mail adresu
+                  </div>
+                </div>
+                <div id="street-holder" class="mb-3 mt-3">
+                    <label for="ulica">Ulica (bez kućnog broja)</label>
+                        <input type="text" class="form-control" name="ulica" id="ulica" required placeholder="Ulica" 
+                                onkeydown="return /[a-z, ,č,ć,š,đ,ž,\.,\-,_]/i.test(event.key)"
+                                onblur="if (this.value == '') {this.value = '';}"
+                                onfocus="if (this.value == '') {this.value = '';}"
+                        >
+                </div>
+               <button type="submit" class="btn btn-primary">Registracija</button>
+                <div id="success" class="valid-feedback text-center font-weight-bold"></div>
+                <div id="error" class="api-error"></div>
+            </form>
+        </div>
+    </div>
+</div>

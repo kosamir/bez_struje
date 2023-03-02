@@ -1,0 +1,8 @@
+.env
+dist/**
+.google*
+.logs
+.vimrc
+.unododir/**
+node_modules/**
+Session.vim
