@@ -19,7 +19,7 @@ export const initScheduledJobs = () => {
   /*
    * run every day at noon for now
    */
-  const tick = cron.schedule("* 12 * * *", async () => {
+  const tick = cron.schedule("00 00 12 * * 0-6", async () => {
     try {
       for await (const user of User.find({
         is_active: true
