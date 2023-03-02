@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "live": "nodemon index.js",
-    "build":"vite build"
+    "build": "vite build"
   },
   "repository": {
     "type": "git",
