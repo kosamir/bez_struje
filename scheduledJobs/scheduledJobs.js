@@ -1,15 +1,13 @@
 import cron from "node-cron";
 import { hepCrawler } from "../config/hepCrawler.js";
-import User from "../models/user.model.js";
 import logger from "../config/logger.js";
-import { hash, genSalt } from "bcrypt";
 import { sendMail } from "../config/mailer.js";
+import User from "../models/user.model.js";
 
 export const initScheduledJobs = () => {
   /*
    * run every day midnight
    */
-
   const clearJunk = cron.schedule("0 0 0 * * *", async () => {
     logger.info("Clearing junk from database");
     const deletedCount = await User.clearJunk();
@@ -17,7 +15,7 @@ export const initScheduledJobs = () => {
   });
 
   /*
-   * run every day at noon for now
+   * run every day monday-saturday at 12am
    */
   const tick = cron.schedule("00 00 12 * * 0-6", async () => {
     try {
@@ -32,8 +30,6 @@ export const initScheduledJobs = () => {
               .toUpperCase()
               .includes(user.street.toString().toUpperCase())
           ) {
-            const toHash = user.email + user.street + user.city;
-            let hashed = await hash(toHash, await genSalt(10));
             const body = {
               data: res,
               grad: grad,
