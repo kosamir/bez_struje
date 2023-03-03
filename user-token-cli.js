@@ -1,13 +1,16 @@
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+dotenv.config();
+console.log(process.env);
 const getToken = () =>
   new Promise((resolve, reject) => {
     const payload = {
-      password: "magicword"
+      password: process.env.API_MAGIC_WORD
     };
     jwt.sign(
       payload,
-      "notwithoutmagicword",
-      { expiresIn: "8s" },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRES_IN },
       (err, token) => {
         if (err) {
           console.log(err);
@@ -21,7 +24,7 @@ const token = await getToken();
 
 const verify = token =>
   new Promise((resolve, re) => {
-    jwt.verify(token, "notwithoutmagicword", {}, (err, decoded) => {
+    jwt.verify(token, process.env.JWT_SECRET, {}, (err, decoded) => {
       if (err) resolve(err);
       resolve(decoded);
     });
@@ -38,4 +41,4 @@ const decoded = jwt.decode(token);
 console.log(decoded);
 setTimeout(() => {
   console.log(isExpired(decoded.exp));
-}, 5000);
+}, 26000);
