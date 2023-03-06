@@ -2,7 +2,24 @@
 <div  class="container d-flex align-items-center justify-content-center  bg-light-4 border border-success p-2 mb-2 border-opacity-25">
     <div class="row">
         <div role="button" onclick="window.location.href='/'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-            <h1>Registracija na notifikacije HEP radova na el. mreži</h1>
+            <h1 class="text-center">Registracija na notifikacije HEP radova na el. mreži u Hrvatskoj</h1>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 ">
+            <div class="text-center font-weight-bold text-uppercase">
+                <b>Motivacija</b>
+            </div>
+            <div class="text-center">
+                <p>
+                U nedostatku <big>JAVNOG SERVISA</big> koji bi korisnike HEP električne mreže 
+                izvješćivao o planiranim radovima HEP-a na održavanju električne mreže u Hrvatskoj (isključenje struje), 
+                već su prinuđeni svakodnevno samostalno provjeravati 
+                <a href="https://hep.hr/bez-struje/19">javno objavljene podatake</a> 
+                </p>
+            </div>
+            <div class="text-center">
+                Bio sam slobodan napraviti servis koji bi putem email-a izvješćivao korisnike o nestanku struje u 
+                njihovim ulicama po izvršenoj registraciji na uslugu putem forme ispod. 
+            </div>
         </div>
     </div>
 </div>
@@ -61,7 +78,7 @@ window.onload = (event) => {
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
             <form action="/register" id="registrationForm" class='was-validated'  method="post" role="form" enctype="application/x-www-form-urlencoded">
-                <legend class="text-center">Unos podataka za izvješćivanje mailom o planiranim radovima HEP ods-a</legend>
+                <legend class="text-center">Unos podataka za izvješćivanje </legend>
                 <div class="mb-3 mt-3">
                     <label for="dp">Odaberite distribucijsko područje</label>
                     {{{select}}}
@@ -73,15 +90,15 @@ window.onload = (event) => {
                 </div>
                 {{/if}}
                 <div id="email-holder" class="mb-3 mt-3">
-                    <label for="email">Email adresa za zaprimanje obavijesti o radovima</label>
+                    <label for="email">Email adresa za zaprimanje notifikacije o radovima</label>
                         <input type="text" class="form-control" name="email" id="email"  
                         placeholder="Email Adresa" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" >
                     <div class="invalid-feedback feedback-pos">
-                        Molimo unesite ispravnu e-mail adresu
+                        Molimo upišite ispravnu e-mail adresu
                   </div>
                 </div>
                 <div id="street-holder" class="mb-3 mt-3">
-                    <label for="ulica">Ulica (bez kućnog broja)</label>
+                    <label for="ulica">Ulica (bez kućnog broja, naselja, samo (puni) naziv ulice)</label>
                         <input type="text" class="form-control" name="ulica" id="ulica" required placeholder="Ulica" 
                                 onkeydown="return /[a-z, ,č,ć,š,đ,ž,\.,\-,_]/i.test(event.key)"
                                 onblur="if (this.value == '') {this.value = '';}"

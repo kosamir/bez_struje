@@ -19,7 +19,8 @@ export const index = async (req, res, next) => {
   );
 
   res.render("index", {
-    title: "HEP bezStruje",
+    title:
+      "Registracija na uslugu izvješćivanja o nestanku struje uslijed radova na električnoj mreži",
     select: first,
     select2: second,
     magicword: `'${magicword}'`
