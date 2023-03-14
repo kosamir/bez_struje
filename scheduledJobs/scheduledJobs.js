@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import { hepCrawler } from "../config/hepCrawler.js";
 import logger from "../config/logger.js";
-import { sendMail } from "../config/mailer.js";
+import { sendMail, getMailerGoogle } from "../config/mailer.js";
 import User from "../models/user.model.js";
 
 export const initScheduledJobs = () => {
@@ -11,6 +11,16 @@ export const initScheduledJobs = () => {
   const clearJunk = cron.schedule("0 0 0 * * *", async () => {
     logger.info("Clearing junk from database");
     const deletedCount = await User.clearJunk();
+    let trans = getMailerGoogle();
+
+    let mail = (await trans).sendMail({
+      from: process.env.EMAIL,
+      to: "amir.kos@gmail.com",
+      subject: "gmail still running",
+      text: `Deleted count: ${deletedCount}`
+    });
+
+    logger.info(`Email sent :${mail.response}`);
     logger.info(`Clearing junk from database deletedCount:${deletedCount}`);
   });
 
