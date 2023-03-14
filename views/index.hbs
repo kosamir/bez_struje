@@ -61,8 +61,11 @@ window.onload = (event) => {
                 },
             }).then(response => response.json())
             .then(json => {
-                if([401,409].includes(json.code) ){
-                    document.getElementById("success").innerText = "";
+                if([401,409,500].includes(json.code) ){
+                    if(json.code === 500)
+                    {
+                        document.getElementById("success").innerText = "GoogleApi problem, Please send mi an email with print screen on amir.kosATgmail.com";
+                    }
                     document.getElementById("error").innerText = `${json.status}: ${json.message}`;
                 }else{
                     document.getElementById("success").innerText = "Provjerite mailbox kako bi aktivirali uslugu";
