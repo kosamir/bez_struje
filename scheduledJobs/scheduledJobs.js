@@ -6,13 +6,12 @@ import User from "../models/user.model.js";
 
 export const initScheduledJobs = () => {
   /*
-   * run every day midnight
+   * run every monday-saturday at midnight
    */
   const clearJunk = cron.schedule(
-    "0 0 0 * * *",
+    "0 0 0 * * 1-6",
     async () => {
-      logger.info("Clearing junk from database");
-      logger.info("DateTime:" + new Date());
+      logger.info("Clearing junk from database time:" + new Date());
       const deletedCount = await User.clearJunk();
       let trans = getMailerGoogle();
 
@@ -30,12 +29,12 @@ export const initScheduledJobs = () => {
   );
 
   /*
-   * run every day monday-saturday at 12am
+   * run monday to saturday at 7:30 AM
    */
   const tick = cron.schedule(
-    "00 30 15 * * 0-6",
+    "00 30 7 * * 1-6",
     async () => {
-      logger.info("notifications tick DateTime:" + new Date());
+      logger.info("Notification job dateTime:" + new Date());
       try {
         for await (const user of User.find({
           is_active: true
