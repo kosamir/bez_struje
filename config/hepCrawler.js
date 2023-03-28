@@ -56,7 +56,6 @@ const getInnerTextFromElements = async (page, selector) => {
     const text = await (await e.getProperty("innerText")).jsonValue();
     return await text;
   });
-  let res = await Promise.all(promises); //.then(t => console.log(t));
   return await Promise.all(promises);
 };
 

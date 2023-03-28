@@ -12,7 +12,7 @@ export const index = async (req, res, next) => {
   } else {
     first = await getDistributionAreaSelect();
   }
-  let magicword = await jwt.sign(
+  let magicword = jwt.sign(
     { password: process.env.API_MAGIC_WORD },
     process.env.JWT_SECRET,
     { expiresIn: process.env.JWT_EXPIRES_IN }

@@ -25,7 +25,7 @@ const token = await getToken();
 const verify = token =>
   new Promise((resolve, re) => {
     jwt.verify(token, process.env.JWT_SECRET, {}, (err, decoded) => {
-      if (err) resolve(err);
+      if (err) re(err);
       resolve(decoded);
     });
   });
