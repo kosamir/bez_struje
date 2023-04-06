@@ -1,6 +1,5 @@
 import jwt from "jsonwebtoken";
 import {
-  getBrowser,
   getDistributionAreaSelect,
   getDistributionAreaSelectChild
 } from "./../config/hepCrawler.js";
@@ -10,8 +9,6 @@ export const index = async (req, res, next) => {
   if (req.query.dp) {
     first = await getDistributionAreaSelect();
     second = await getDistributionAreaSelectChild(req.query.dp);
-    const b = await getBrowser();
-    console.log(b);
   } else {
     first = await getDistributionAreaSelect();
   }

@@ -30,14 +30,12 @@ export const register = async (req, res, next) => {
       user = await newUser.save();
     } catch (err) {
       if (err.code === 11000) {
-        return next(createError((409, `Email: ${email} is already taken!!`)));
+        return next(createError(409, `Email: ${email} is already taken!!`));
       } else {
         return next(createError(500, err));
       }
     }
-    if (!user) {
-      return next(createError(500, err));
-    }
+
     const confirmationLink = `${process.env.API_HOST}/register/validate/${hashed}`;
     const tomorow = LocalDate.now();
     const until = LocalDateTime.of(
