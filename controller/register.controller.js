@@ -31,8 +31,9 @@ export const register = async (req, res, next) => {
     } catch (err) {
       if (err.code === 11000) {
         return next(createError((409, `Email: ${email} is already taken!!`)));
+      } else {
+        return next(createError(500, err));
       }
-      return next(createError(500, err));
     }
     if (!user) {
       return next(createError(500, err));
@@ -53,7 +54,6 @@ export const register = async (req, res, next) => {
     logger.error(err.toString());
     return next(createError(500, err));
   }
-
   res.status(200).json(user);
 };
 

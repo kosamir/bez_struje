@@ -1,16 +1,25 @@
 import puppeteer from "puppeteer";
 
+var brow;
+/*
+ * run only one instance of chromium
+ */
+export const getBrowser = async () => {
+  if (!brow) {
+    brow = await puppeteer.launch({
+      headless: true,
+      defaultViewport: null
+    });
+  }
+  return brow;
+};
+
 /**
  * getDistributionAreaSelectChild i.e second select input on
  * `https://www.hep.hr/ods/bez-struje/19?dp=sbrod
 ` */
-
 export const getDistributionAreaSelectChild = async dp => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null
-  });
-
+  const browser = await getBrowser();
   const page = await browser.newPage();
   await page.goto(`${process.env.HEP_URL_BASE}?dp=${dp}`, {
     waitUntil: "domcontentloaded"
@@ -24,7 +33,6 @@ export const getDistributionAreaSelectChild = async dp => {
   const outer_html = await (
     await elements_arr[1].getProperty("outerHTML")
   ).jsonValue();
-  await browser.close();
   return outer_html;
 };
 
@@ -33,11 +41,7 @@ export const getDistributionAreaSelectChild = async dp => {
  * `https://www.hep.hr/ods/bez-struje/19
 ` */
 export const getDistributionAreaSelect = async () => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null
-  });
-
+  const browser = await getBrowser();
   const page = await browser.newPage();
   await page.goto(`${process.env.HEP_URL_BASE}`, {
     waitUntil: "domcontentloaded"
@@ -46,7 +50,6 @@ export const getDistributionAreaSelect = async () => {
   const element = await page.$("#dp");
   const element_property = await element.getProperty("outerHTML");
   const outer_html = await element_property.jsonValue();
-  await browser.close();
   return outer_html;
 };
 
@@ -64,11 +67,7 @@ const getInnerTextFromElements = async (page, selector) => {
  *
  */
 export const hepCrawler = async (dp, dpChild) => {
-  const browser = await puppeteer.launch({
-    headless: true,
-    defaultViewport: null
-  });
-
+  const browser = await getBrowser();
   const page = await browser.newPage();
   await page.goto(`${process.env.HEP_URL_BASE}?dp=${dp}&el=${dpChild}`, {
     waitUntil: "domcontentloaded"
