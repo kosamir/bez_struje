@@ -1,16 +1,13 @@
 import puppeteer from "puppeteer";
-
-var brow;
+import logger from "../config/logger.js";
 /*
  * run only one instance of chromium
  */
 export const getBrowser = async () => {
-  if (!brow) {
-    brow = await puppeteer.launch({
-      headless: true,
-      defaultViewport: null
-    });
-  }
+  const brow = await puppeteer.launch({
+    headless: true,
+    defaultViewport: null
+  });
   return brow;
 };
 
@@ -33,6 +30,10 @@ export const getDistributionAreaSelectChild = async dp => {
   const outer_html = await (
     await elements_arr[1].getProperty("outerHTML")
   ).jsonValue();
+
+  logger.info("AreaSelectChild");
+  logger.info(browser.process().spawnargs);
+  await browser.close();
   return outer_html;
 };
 
@@ -50,6 +51,9 @@ export const getDistributionAreaSelect = async () => {
   const element = await page.$("#dp");
   const element_property = await element.getProperty("outerHTML");
   const outer_html = await element_property.jsonValue();
+  logger.info("AreaSelect");
+  logger.info(browser.process().spawnargs);
+  await browser.close();
   return outer_html;
 };
 
@@ -100,6 +104,9 @@ export const hepCrawler = async (dp, dpChild) => {
       });
     }
   }
+
+  logger.info("HepCrawler");
+  logger.info(browser.process().spawnargs);
   await browser.close();
   return [results, dp, dpChild];
 };
