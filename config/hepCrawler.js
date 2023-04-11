@@ -1,5 +1,7 @@
 import puppeteer from "puppeteer";
+import fs from "fs-extra";
 import logger from "../config/logger.js";
+import { getDirectorySize } from "../config/diskUsage.js";
 /*
  * run only one instance of chromium
  */
@@ -31,9 +33,7 @@ export const getDistributionAreaSelectChild = async dp => {
     await elements_arr[1].getProperty("outerHTML")
   ).jsonValue();
 
-  logger.info("AreaSelectChild");
-  logger.info(browser.process().spawnargs);
-  await browser.close();
+  removeChromeProfileData(browser);
   return outer_html;
 };
 
@@ -51,9 +51,7 @@ export const getDistributionAreaSelect = async () => {
   const element = await page.$("#dp");
   const element_property = await element.getProperty("outerHTML");
   const outer_html = await element_property.jsonValue();
-  logger.info("AreaSelect");
-  logger.info(browser.process().spawnargs);
-  await browser.close();
+  removeChromeProfileData(browser);
   return outer_html;
 };
 
@@ -105,8 +103,22 @@ export const hepCrawler = async (dp, dpChild) => {
     }
   }
 
-  logger.info("HepCrawler");
-  logger.info(browser.process().spawnargs);
-  await browser.close();
+  removeChromeProfileData(browser);
   return [results, dp, dpChild];
+};
+
+const removeChromeProfileData = browser => {
+  let chromeSpawnArgs = browser.process().spawnargs;
+  let chromeTmpDataDir;
+  for (let i = 0; i < chromeSpawnArgs.length; i++) {
+    if (chromeSpawnArgs[i].indexOf("--user-data-dir=") === 0) {
+      chromeTmpDataDir = chromeSpawnArgs[i].replace("--user-data-dir=", "");
+    }
+  }
+  if (chromeTmpDataDir !== null) {
+    //  logger.info(getDirectorySize(chromeTmpDataDir));
+    fs.removeSync(chromeTmpDataDir);
+    logger.info(`removed ${chromeTmpDataDir}`);
+  }
+  browser.close();
 };
