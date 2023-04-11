@@ -32,8 +32,8 @@ export const initScheduledJobs = () => {
    * run monday to saturday at 7:30 AM
    */
   const tick = cron.schedule(
-    "* * * * *",
-    //    00 30 7 * * 1-6",
+    //   "* * * * *",
+    "00 30 7 * * 1-6",
     async () => {
       logger.info("Notification job dateTime:" + new Date());
       try {
